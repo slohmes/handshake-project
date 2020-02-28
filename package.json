@@ -1,0 +1,19 @@
+{
+  "name": "js-sample-app",
+  "version": "1.0.0",
+  "description": "A learning-by-doing exploration of the JS ecosystem.",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "js-sample-app"
+  },
+  "author": "Sarah Lohmeier",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1",
+    "puppeteer": "^0.12.0"
+  }
+}
