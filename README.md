@@ -3,11 +3,7 @@
 Created from slohmes/js-sample-app. Uses Node.js, Express, EJS, and MySQL.
 
 ### TODO:
-
-- connect and populate database (MySQL)
 - add testing framework
-- add react (?) or templating engine (?)
-- display chirps from DB on index page
 
 #### Getting Started
 

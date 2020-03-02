@@ -3,7 +3,16 @@
 const express = require('express');
 const mysql = require('mysql');
 
-const app = express();
+let connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'chirpsAdmin',
+	password: 'dataBird',
+	database: 'chirps'
+});
+
+connection.connect();
+
+let app = express();
 
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
@@ -11,25 +20,18 @@ app.engine('html', require('ejs').renderFile);
 
 // index page
 app.get('/index', (req, res) => {
-	const chirp_data = [{id: 1, text: 'first cheep'}, {id: 2, text: 'second cheep'}];
-
-	// credentials would ideally be set via env vars instead.
-	const con = mysql.createConnection({
-	  host: "localhost",
-	  user: "chirpsAdmin",
-	  password: "dataBird",
-	  database: "chirps"
-	});
-
-	con.connect((err) => {
+	let chirps = [];
+	connection.query('SELECT * FROM chirps', (err, rows) => {
 	  if (err) throw err;
-	  console.log("Connected!");
+		rows.forEach((row) => {
+			chirps.push({
+	      'id': row.id,
+	      'text': row.text
+	    });
+		});
+		res.render('index', {'chirps': chirps});
 	});
 
-	con.end((err) => {
-	  console.log(err);
-	});
-	res.render('index', {chirps: chirp_data});
 });
 
 // 404
@@ -40,8 +42,8 @@ app.use((req, res) => {
 });
 
 // 500
-app.use((error, req, res, next) => {
-	console.error(error.stack);
+app.use((err, req, res, next) => {
+	console.error(err.stack);
 	res.type('text/plain');
 	res.status(500);
 	res.send('500 - Server Error');
