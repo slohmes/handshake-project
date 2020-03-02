@@ -5,6 +5,14 @@
 	</head>
 	<body>
 		<h1>Chirps</h1>
+		<div>
+			<h3>Create a new chirp!</h3>
+			<p>What's on your mind? Tell the world, in 140 characters or less.</p>
+			<form action="/create" method="POST">
+				<input name="text">
+				<button>Submit</button>
+			</form>
+		</div>
 		<% if (chirps.length > 0) { %>
 			<ul>
         <% chirps.forEach((chirp) => { %>
