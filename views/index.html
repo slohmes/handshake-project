@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chirps</title>
+	</head>
+	<body>
+		<h1>Chirps</h1>
+		<% if (chirps.length > 0) { %>
+			<ul>
+        <% chirps.forEach((chirp) => { %>
+          <li><%= chirp.id %> -- <%= chirp.text %></li>
+        <% }); %>
+			</ul>
+		<% } %>
+	</body>
+</html>

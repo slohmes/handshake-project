@@ -1,34 +1,52 @@
 "use strict";
 
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const mysql = require('mysql');
 
-var app = express();
+const app = express();
 
 app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
 
 // index page
-app.get('/index', function(request, response) {
-	response.type('text/html');
-	response.sendFile(path.join(__dirname+'/src/index.html'));
+app.get('/index', (req, res) => {
+	const chirp_data = [{id: 1, text: 'first cheep'}, {id: 2, text: 'second cheep'}];
+
+	// credentials would ideally be set via env vars instead.
+	const con = mysql.createConnection({
+	  host: "localhost",
+	  user: "chirpsAdmin",
+	  password: "dataBird",
+	  database: "chirps"
+	});
+
+	con.connect((err) => {
+	  if (err) throw err;
+	  console.log("Connected!");
+	});
+
+	con.end((err) => {
+	  console.log(err);
+	});
+	res.render('index', {chirps: chirp_data});
 });
 
 // 404
-app.use(function(request, response) {
-	response.type('text/plain');
-	response.status(404);
-	response.send('404 - Not Found');
+app.use((req, res) => {
+	res.type('text/plain');
+	res.status(404);
+	res.send('404 - Not Found');
 });
 
 // 500
-app.use(function(error, request, response, next) {
+app.use((error, req, res, next) => {
 	console.error(error.stack);
-	response.type('text/plain');
-	response.status(500);
-	response.send('500 - Server Error');
+	res.type('text/plain');
+	res.status(500);
+	res.send('500 - Server Error');
 });
 
-app.listen(app.get('port'), function () {
+app.listen(app.get('port'), () => {
 	console.log('App is running at http://localhost:' + app.get('port') + '/index; press Ctrl + c to terminate.');
-
 });
