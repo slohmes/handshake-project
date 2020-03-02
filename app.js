@@ -2,6 +2,7 @@
 
 const express = require('express');
 const mysql = require('mysql');
+const https = require('https');
 
 let app = express();
 
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // index page
 const getChirpsSql = 'SELECT * FROM chirps ORDER BY id DESC';
+
+const notificationEndpoint = 'https://bellbird.joinhandshake-internal.com/push';
 
 app.get('/index', (req, res) => {
 	let chirps = [];
@@ -33,9 +36,29 @@ app.post('/create', (req, res) => {
 	  if (err) throw err;
 	  console.log('Inserted new chirp with ID:', conRes.insertId);
 		res.redirect('index');
-	});
 
-	// TODO post to notification API
+		const data = JSON.stringify({
+		  chirp_id: conRes.insertId
+		})
+
+		const options = {
+		  method: 'POST',
+		  headers: {
+		    'Content-Type': 'application/json',
+		    'Content-Length': data.length
+		  }
+		}
+		const req = https.request(notificationEndpoint, options, (res) => {
+			console.log(`statusCode: ${res.statusCode}`);
+		});
+		req.on('error', (e) => {
+		  console.error(`problem with request: ${e.message}`);
+		});
+
+		req.write(data);
+		req.end();
+
+		});
 });
 
 // 404
