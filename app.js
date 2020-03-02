@@ -11,7 +11,7 @@ app.engine('html', require('ejs').renderFile);
 app.use(express.urlencoded({ extended: true }));
 
 // index page
-const getChirpsSql = 'SELECT * FROM chirps';
+const getChirpsSql = 'SELECT * FROM chirps ORDER BY id DESC';
 
 app.get('/index', (req, res) => {
 	let chirps = [];
@@ -32,18 +32,7 @@ app.post('/create', (req, res) => {
 	connection.query('INSERT INTO chirps SET ?', newChirp, (err, conRes) => {
 	  if (err) throw err;
 	  console.log('Inserted new chirp with ID:', conRes.insertId);
-
-		let chirps = [];
-		connection.query(getChirpsSql, (err, rows) => {
-		  if (err) throw err;
-			rows.forEach((row) => {
-				chirps.push({
-		      'id': row.id,
-		      'text': row.text
-		    });
-			});
-			res.render('index', {'chirps': chirps});
-		});
+		res.redirect('index');
 	});
 
 	// TODO post to notification API

@@ -16,7 +16,7 @@
 		<% if (chirps.length > 0) { %>
 			<ul>
         <% chirps.forEach((chirp) => { %>
-          <li><%= chirp.id %> -- <%= chirp.text %></li>
+          <li><%= chirp.id %> -- <%= chirp.text.toUpperCase() %></li>
         <% }); %>
 			</ul>
 		<% } %>
