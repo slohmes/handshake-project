@@ -23,7 +23,8 @@ app.get('/index', (req, res) => {
 		rows.forEach((row) => {
 			chirps.push({
 	      'id': row.id,
-	      'text': row.text
+	      'text': row.text,
+				'upvotes': row.upvotes
 	    });
 		});
 		res.render('index', {'chirps': chirps});
@@ -59,6 +60,13 @@ app.post('/create', (req, res) => {
 		req.end();
 
 		});
+});
+
+app.post('upvote', (req, res) => {
+	connection.query('UPDATE chirps SET upvotes = upvotes + 1 WHERE id = ?', [req.body.id], (err, conRes) => {
+		if (err) throw err;
+		res.redirect('index');
+	});
 });
 
 // 404

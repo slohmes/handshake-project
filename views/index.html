@@ -16,7 +16,12 @@
 		<% if (chirps.length > 0) { %>
 			<ul>
         <% chirps.forEach((chirp) => { %>
-          <li><%= chirp.id %> -- <%= chirp.text.toUpperCase() %></li>
+          <li>
+						<%= chirp.id %> -- <%= chirp.text.toUpperCase() %> [<%= chirp.upvotes %> upvotes] <form action='/upvote' method='POST'>
+							<input hidden='true' type="text" name="id" value="<%= chirp.id %>" />
+							<button>+1</button>
+						</form>
+					</li>
         <% }); %>
 			</ul>
 		<% } %>
